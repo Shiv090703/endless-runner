@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <radialGradient id="coinGlow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+      <stop offset="60%" stop-color="#ffd500" />
+      <stop offset="90%" stop-color="#ff9900" />
+      <stop offset="100%" stop-color="#ff3300" stop-opacity="0" />
+    </radialGradient>
+    <filter id="glowEffect">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Outer Glow -->
+  <circle cx="50" cy="50" r="45" fill="url(#coinGlow)" opacity="0.3" />
+  
+  <!-- Main Coin Body -->
+  <circle cx="50" cy="50" r="35" fill="#111" stroke="#ffd500" stroke-width="4" filter="url(#glowEffect)" />
+  
+  <!-- Inner Ring -->
+  <circle cx="50" cy="50" r="25" fill="none" stroke="#ffaa00" stroke-width="2" stroke-dasharray="8 4" opacity="0.8" />
+  
+  <!-- Center Hologram Detail -->
+  <path d="M 50 35 L 50 65 M 35 50 L 65 50" stroke="#ffd500" stroke-width="3" opacity="0.9" />
+  <circle cx="50" cy="50" r="5" fill="#fff" filter="url(#glowEffect)" />
+</svg>

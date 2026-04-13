@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 120" fill="none">
+  <defs>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="glow-soft" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- ================================
+       BACK VIEW - Running into horizon
+       Character runs AWAY from camera
+       Slight downward perspective
+  ================================== -->
+
+  <!-- HEAD (back of head - slightly smaller, higher up) -->
+  <ellipse cx="40" cy="10" rx="8" ry="7" stroke="#00f2ff" stroke-width="2.5" filter="url(#glow)"/>
+  <!-- Back of neck -->
+  <line x1="40" y1="17" x2="40" y2="24" stroke="#00f2ff" stroke-width="3" filter="url(#glow)"/>
+
+  <!-- SHOULDERS (wide, in perspective - foreshortened) -->
+  <line x1="40" y1="24" x2="18" y2="30" stroke="#00f2ff" stroke-width="3" filter="url(#glow)"/>
+  <line x1="40" y1="24" x2="62" y2="30" stroke="#00f2ff" stroke-width="3" filter="url(#glow)"/>
+
+  <!-- SPINE / TORSO (going down with perspective) -->
+  <line x1="40" y1="24" x2="40" y2="58" stroke="#00f2ff" stroke-width="3.5" filter="url(#glow)"/>
+
+  <!-- CHEST HORIZONTAL (foreshortened perspective = narrower at top) -->
+  <line x1="24" y1="35" x2="56" y2="35" stroke="#00f2ff" stroke-width="2" filter="url(#glow-soft)" opacity="0.7"/>
+  <line x1="26" y1="44" x2="54" y2="44" stroke="#00f2ff" stroke-width="1.5" filter="url(#glow-soft)" opacity="0.5"/>
+  <line x1="28" y1="52" x2="52" y2="52" stroke="#00f2ff" stroke-width="1.5" filter="url(#glow-soft)" opacity="0.4"/>
+
+  <!-- LEFT ARM (swinging forward - coming toward camera) -->
+  <!-- Upper arm going outward & slightly toward viewer -->
+  <line x1="18" y1="30" x2="4" y2="48" stroke="#d575ff" stroke-width="2.5" filter="url(#glow)"/>
+  <!-- Forearm bending at elbow, coming forward -->
+  <line x1="4" y1="48" x2="8" y2="64" stroke="#d575ff" stroke-width="2" filter="url(#glow)"/>
+
+  <!-- RIGHT ARM (swinging back  - going away) -->
+  <line x1="62" y1="30" x2="74" y2="46" stroke="#d575ff" stroke-width="2.5" filter="url(#glow)"/>
+  <line x1="74" y1="46" x2="70" y2="60" stroke="#d575ff" stroke-width="2" filter="url(#glow)"/>
+
+  <!-- HIPS (wide from back, foreshortened) -->
+  <line x1="30" y1="58" x2="50" y2="58" stroke="#00f2ff" stroke-width="3" filter="url(#glow)"/>
+
+  <!-- LEFT LEG (stepping forward = coming toward viewer = wider apart) -->
+  <!-- Upper leg angled left-outward and forward -->
+  <line x1="30" y1="58" x2="14" y2="82" stroke="#00f2ff" stroke-width="3" filter="url(#glow)"/>
+  <!-- Lower leg (shin angled inward - heel up = running stride) -->
+  <line x1="14" y1="82" x2="20" y2="108" stroke="#00f2ff" stroke-width="2.5" filter="url(#glow)"/>
+  <!-- Foot - pointing forward (toward camera, slightly spread) -->
+  <line x1="20" y1="108" x2="8" y2="116" stroke="#00f2ff" stroke-width="2.5" filter="url(#glow)"/>
+  <line x1="8" y1="116" x2="26" y2="118" stroke="#00f2ff" stroke-width="2" filter="url(#glow-soft)"/>
+
+  <!-- RIGHT LEG (pushing off = going away from viewer = closer together) -->
+  <line x1="50" y1="58" x2="64" y2="78" stroke="#00f2ff" stroke-width="3" filter="url(#glow)"/>
+  <!-- Lower leg lifted behind, heel kicks back toward viewer -->
+  <line x1="64" y1="78" x2="58" y2="100" stroke="#00f2ff" stroke-width="2.5" filter="url(#glow)"/>
+  <!-- Foot - trailing (behind, heel kicks up) -->
+  <line x1="58" y1="100" x2="72" y2="104" stroke="#00f2ff" stroke-width="2" filter="url(#glow-soft)"/>
+
+  <!-- GRID LINES on body (Tron wireframe suit detail - vertical) -->
+  <line x1="34" y1="26" x2="34" y2="56" stroke="#00f2ff" stroke-width="0.8" opacity="0.35"/>
+  <line x1="40" y1="26" x2="40" y2="56" stroke="#00f2ff" stroke-width="0.8" opacity="0.35"/>
+  <line x1="46" y1="26" x2="46" y2="56" stroke="#00f2ff" stroke-width="0.8" opacity="0.35"/>
+</svg>

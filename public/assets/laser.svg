@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Horizontal laser beam that you must slide under -->
+  <!-- Laser Base left -->
+  <polygon points="0,40 20,40 20,60 0,60" fill="#222" stroke="#00ffff" stroke-width="2" />
+  <!-- Laser Base right -->
+  <polygon points="80,40 100,40 100,60 80,60" fill="#222" stroke="#00ffff" stroke-width="2" />
+  
+  <!-- Glowing Beams -->
+  <rect x="20" y="47" width="60" height="6" fill="#00ffff" opacity="0.4" />
+  <rect x="20" y="49" width="60" height="2" fill="#fff" />
+  
+  <!-- Downward Arrows for "Slide" -->
+  <polygon points="45,20 55,20 50,30" fill="#00ffff" opacity="0.8" />
+  <polygon points="45,30 55,30 50,40" fill="#00ffff" opacity="0.8" />
+</svg>
