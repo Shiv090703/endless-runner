@@ -1,9 +1,17 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient'; 
+import { Mail, Lock, UserPlus, LogIn } from 'lucide-react';
 
 export default function LoginScreen({ onLogin }: { onLogin: () => void }) {
   const [showIntro, setShowIntro] = useState(true);
   const [fadeIntro, setFadeIntro] = useState(false);
+  
+  // Auth state
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [message, setMessage] = useState<{ text: string; type: 'error' | 'success' } | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     // Show intro for 3 seconds, then start fading it out
@@ -11,7 +19,6 @@ export default function LoginScreen({ onLogin }: { onLogin: () => void }) {
       setFadeIntro(true);
     }, 3000);
 
-    // After fade-out animation completes, remove intro from DOM
     const timer2 = setTimeout(() => {
       setShowIntro(false);
     }, 4000);
@@ -26,14 +33,61 @@ export default function LoginScreen({ onLogin }: { onLogin: () => void }) {
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
+        options: {
+          redirectTo: window.location.origin
+        }
       });
       if (error) throw error;
-      // Note: Supabase will redirect the page to Google, and back to this app with a session
-    } catch (error) {
-      console.error("Auth error:", error);
-      // Fallback for development if OAuth is not configured on Supabase Dashboard yet
-      console.warn("Falling back to Guest Mode.");
-      onLogin(); 
+    } catch (error: any) {
+      setMessage({ text: error.message || "OAuth connection failed", type: 'error' });
+    }
+  };
+
+  const handleEmailAuth = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage(null);
+
+    try {
+      if (isSignUp) {
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+        });
+        if (error) throw error;
+        setMessage({ text: "Registration successful! Please check your email for verification.", type: 'success' });
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        if (error) throw error;
+        onLogin();
+      }
+    } catch (error: any) {
+      setMessage({ text: error.message, type: 'error' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    if (!email) {
+      setMessage({ text: "Please enter your email address first.", type: 'error' });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (error) throw error;
+      setMessage({ text: "Password reset link sent to your email!", type: 'success' });
+    } catch (error: any) {
+      setMessage({ text: error.message, type: 'error' });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -51,37 +105,89 @@ export default function LoginScreen({ onLogin }: { onLogin: () => void }) {
         </div>
       )}
 
-      {/* Main Login Interface (appears after intro fades) */}
+      {/* Main Login Interface */}
       {!showIntro && (
-        <div className="glass-panel animate-fade-in" style={{ padding: '50px 40px', textAlign: 'center', maxWidth: '420px', width: '90%' }}>
+        <div className="glass-panel animate-fade-in" style={{ padding: '40px', textAlign: 'center', maxWidth: '440px', width: '90%' }}>
           
-          <h1 className="neon-text-primary" style={{ marginBottom: '15px', fontSize: '2.5rem' }}>Endless Runner</h1>
-          
-          <p style={{ color: 'var(--on-surface-variant)', marginBottom: '40px', lineHeight: '1.6' }}>
-            Initialize your neural interface to access the main sequence protocol.
+          <h1 className="neon-text-primary" style={{ marginBottom: '10px', fontSize: '2.5rem' }}>Endless Runner</h1>
+          <p style={{ color: 'var(--on-surface-variant)', marginBottom: '30px', fontSize: '0.9rem' }}>
+            {isSignUp ? 'Initialize new neural signature' : 'Enter access credentials to sync state'}
           </p>
-          
-          {/* Real Google Login Button connecting to Supabase */}
+
+          {message && (
+            <div className={`auth-message ${message.type}`}>
+              {message.text}
+            </div>
+          )}
+
+          <form onSubmit={handleEmailAuth}>
+            <div style={{ position: 'relative' }}>
+              <Mail size={18} style={{ position: 'absolute', left: '14px', top: '16px', color: 'var(--on-surface-variant)' }} />
+              <input 
+                type="email" 
+                placeholder="EMAIL_ADDRESS"
+                className="neon-input"
+                style={{ paddingLeft: '44px' }}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+
+            <div style={{ position: 'relative' }}>
+              <Lock size={18} style={{ position: 'absolute', left: '14px', top: '16px', color: 'var(--on-surface-variant)' }} />
+              <input 
+                type="password" 
+                placeholder="ENCRYPTED_PASSWORD"
+                className="neon-input"
+                style={{ paddingLeft: '44px' }}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+
+            {!isSignUp && (
+              <span className="forgot-password-link" onClick={handleForgotPassword}>
+                FORGOT_PASSWORD?
+              </span>
+            )}
+
+            <button 
+              type="submit"
+              className="btn-primary" 
+              style={{ width: '100%', padding: '16px', marginBottom: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}
+              disabled={loading}
+            >
+              {loading ? 'PROCESSING...' : (isSignUp ? <><UserPlus size={18}/> INITIALIZE_UPLINK</> : <><LogIn size={18}/> SECURE_LOGIN</>)}
+            </button>
+          </form>
+
+          <div style={{ display: 'flex', alignItems: 'center', margin: '20px 0', color: 'var(--outline-variant)' }}>
+            <div style={{ flex: 1, height: '1px', background: 'currentColor' }}></div>
+            <span style={{ margin: '0 15px', fontSize: '0.7rem' }}>OR_OAUTH</span>
+            <div style={{ flex: 1, height: '1px', background: 'currentColor' }}></div>
+          </div>
+
           <button 
+            type="button"
             onClick={handleGoogleLogin}
             style={{ 
               width: '100%', 
-              marginBottom: '20px', 
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'center', 
               gap: '12px',
-              backgroundColor: '#ffffff',
-              color: '#3c4043',
-              border: '1px solid #dadce0',
+              backgroundColor: 'rgba(255,255,255,0.05)',
+              color: 'var(--on-surface)',
+              border: '1px solid var(--outline-variant)',
               padding: '12px 16px',
-              borderRadius: '8px',
-              fontFamily: '"Google Sans", var(--font-body)',
-              fontWeight: 500,
-              letterSpacing: 'normal',
-              textTransform: 'none',
-              boxShadow: '0 1px 2px 0 rgba(60,64,67,0.3)'
+              borderRadius: '6px',
+              fontSize: '0.9rem',
+              transition: 'background 0.2s'
             }}
+            onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.1)'}
+            onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)'}
           >
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 48 48">
               <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
@@ -92,25 +198,11 @@ export default function LoginScreen({ onLogin }: { onLogin: () => void }) {
             Sign in with Google
           </button>
 
-          {/* Guest Mode Fallback */}
-          <button 
-            className="btn-primary"
-            onClick={onLogin}
-            style={{ 
-              width: '100%', 
-              padding: '16px',
-              backgroundColor: 'transparent',
-              border: '1px solid var(--outline-variant)',
-              color: 'var(--on-surface-variant)'
-            }}
-          >
-            PROCEED_AS_GUEST // NO_UPLINK
-          </button>
-
-          <div style={{ marginTop: '30px', fontSize: '0.85rem', color: 'var(--outline-variant)' }}>
-            <span style={{ cursor: 'pointer', margin: '0 10px' }}>Privacy</span> | 
-            <span style={{ cursor: 'pointer', margin: '0 10px' }}>Terms</span> | 
-            <span style={{ cursor: 'pointer', margin: '0 10px' }}>Changelog</span>
+          <div className="auth-toggle-container">
+            {isSignUp ? "Already have a neural signature?" : "New to the grid?"}
+            <span className="auth-link" onClick={() => { setIsSignUp(!isSignUp); setMessage(null); }}>
+              {isSignUp ? 'ACCESS_ACCOUNT' : 'CREATE_UPLINK'}
+            </span>
           </div>
 
         </div>

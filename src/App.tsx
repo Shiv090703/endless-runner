@@ -3,8 +3,8 @@ import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
 import GameScreen from './screens/GameScreen';
 import ResultScreen from './screens/ResultScreen';
-import { LogOut } from 'lucide-react';
-import { supabase } from './lib/supabaseClient';
+import { LogOut, AlertTriangle } from 'lucide-react';
+import { supabase, isSupabaseConfigured } from './lib/supabaseClient';
 import { calculateSynergy } from './lib/synergyEngine';
 import type { SynergyResult } from './lib/synergyEngine';
 
@@ -110,6 +110,20 @@ function App() {
         return null;
     }
   };
+
+  if (!isSupabaseConfigured) {
+    return (
+      <div className="flex-center flex-col" style={{ height: '100vh', background: 'var(--surface-lowest)', color: 'var(--on-surface)', padding: '20px', textAlign: 'center' }}>
+        <AlertTriangle size={64} color="#ff59e4" style={{ marginBottom: '20px' }} />
+        <h1 className="neon-text-primary" style={{ fontSize: '2rem', marginBottom: '10px' }}>UPLINK_FAILURE</h1>
+        <p style={{ maxWidth: '400px', opacity: 0.8, lineHeight: 1.6 }}>
+          The Neural Interface could not establish a secure connection to the database. 
+          Please ensure your <code style={{ color: 'var(--primary)' }}>VITE_SUPABASE_URL</code> and <code style={{ color: 'var(--primary)' }}>VITE_SUPABASE_ANON_KEY</code> are correctly set in your environment configuration.
+        </p>
+        <div style={{ marginTop: '20px', fontSize: '0.8rem', opacity: 0.5 }}>ERROR: CONFIG_MISSING_OR_INVALID</div>
+      </div>
+    );
+  }
 
   return (
     <>
