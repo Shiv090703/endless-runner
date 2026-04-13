@@ -37,7 +37,7 @@ export default function HomeScreen({ onStartGame }: { onStartGame: () => void })
       }}>
         <img
           src="/logo.png"
-          alt="Endless Runner – Tech Journey"
+          alt="Endless Runner"
           style={{
             width: 'min(480px, 90vw)',
             height: 'auto',

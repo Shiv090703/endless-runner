@@ -123,8 +123,8 @@ function App() {
             <div className="header-left">
               <img src="/logo.png" alt="Logo" className="header-logo" />
               <div className="header-title">
-                <span className="cyan">TECH</span>
-                <span className="pink">JOURNEY</span>
+                <span className="cyan">ENDLESS</span>
+                <span className="pink">RUNNER</span>
               </div>
             </div>
             

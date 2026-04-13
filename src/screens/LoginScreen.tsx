@@ -55,7 +55,7 @@ export default function LoginScreen({ onLogin }: { onLogin: () => void }) {
       {!showIntro && (
         <div className="glass-panel animate-fade-in" style={{ padding: '50px 40px', textAlign: 'center', maxWidth: '420px', width: '90%' }}>
           
-          <h1 className="neon-text-primary" style={{ marginBottom: '15px', fontSize: '2.5rem' }}>Tech Journey</h1>
+          <h1 className="neon-text-primary" style={{ marginBottom: '15px', fontSize: '2.5rem' }}>Endless Runner</h1>
           
           <p style={{ color: 'var(--on-surface-variant)', marginBottom: '40px', lineHeight: '1.6' }}>
             Initialize your neural interface to access the main sequence protocol.
